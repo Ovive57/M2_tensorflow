@@ -6,6 +6,11 @@ path2plot = "plots/"
 
 print("Dimension de data : ", np.shape(n.data)) # 785, premier indice c'est la classe et les 784 autres sont les pixels de chaque image. 42000 images
 
+print("On prend", len(n.X_dev)," images pour le test.")
+print("On prend", len(n.X_train), " images pour l'entrainement.")
+
+print("Shapes de : X_train:", np.shape(n.X_train), ", de Y_train:", np.shape(n.Y_train))
+
 ### TEST FONCTIONS INITIALISATION ###
 
 npixel = n.X_dev[0].size # 784 pixels
@@ -82,6 +87,32 @@ print("Shape matrice dJdb1", np.shape(dJdb1), " elle doit être (10,)")
 
 
 
+
+
+
+# Test de taux succes:
+
+a = np.array([1,2,3,4])
+b = np.array([1,3,5,4])
+print("taux attendu: 0.5, taux de succes trouvé:", n.taux_succes(a,b))
+
+a = np.array([1,2,3,4])
+b = np.array([1,2,5,4])
+print("taux attendu: 0.75, taux de succes trouvé:", n.taux_succes(a,b))
+
+
+# Test de l'entrainement:
+
+n_iterations = 100
+
+
+
+W0, W1, b0, b1 = n.entrainement(n.X_train, n.Y_train, n_iterations)
+
+np.save("W0", W0)
+np.save("W1", W1)
+np.save("b0", b0)
+np.save("b1", b1)
 
 
 

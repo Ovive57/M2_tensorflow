@@ -54,10 +54,13 @@ def softmax(Z):
 	sigma = np.exp(Z)/sum(np.exp(Z))
 	
 	return sigma
-	
+
+### Propagation avant ###
+
+
 def prop_avant(data, poids):
 	"""
-	data : vecteur data pour une seule image, on va le faire pour chaque image
+	data : vecteur data (pixels) pour une seule image, on va le faire pour chaque image
 	poids = poids et biais [W0, W1, b0, b1]
 	"""
 
@@ -68,6 +71,8 @@ def prop_avant(data, poids):
 	
 	return Z0, A0, Z1, A1
 	
+### Propagation arriere ###
+
 def classe(label):
 
 	Y = np.zeros(10)
@@ -75,7 +80,6 @@ def classe(label):
 	
 	return Y
 	
-
 def prop_arriere(label, Z0, A0, Z1, A1, data, poids):
 	
 	"""
@@ -98,17 +102,82 @@ def prop_arriere(label, Z0, A0, Z1, A1, data, poids):
 
 
 
-def actualisation(label, Z0, A0, Z1, A1, data, poids):
-	
-	dJdW0, dJdb0, dJdW1, dJdb1 = prop_arriere(label, Z0, A0, Z1, A1, data, poids)
-	dJdW0_L = [dJdW0]
-	dJdb0_L = [dJdb0]
-	dJdW1_L = [dJdW1]
-	dJdb1_L = [dJdb1]
-	
-	
-	return W0, W1, b0, b1
+def actualisation(lambda_, dJdW0_L, dJdb0_L, dJdW1_L, dJdb1_L, poids):
+    """
+    
+    """
+    ncouples = len(dJdW0_L) # à tester
+    
+    # On actualise les poids et biais
+    W1 = poids[1] - lambda_/ncouples*np.sum(dJdW1_L, axis = 0)
+    W0 = poids[0] - lambda_/ncouples*np.sum(dJdW0_L, axis = 0)
+
+    b1 = poids[3] - lambda_/ncouples*np.sum(dJdb1_L, axis = 0)
+    b0 = poids[2] - lambda_/ncouples*np.sum(dJdb0_L, axis = 0)
+
+    return W0, W1, b0, b1
+
+
+def proba_max(probas):
+    """
+     probas les probabilités en sorties 
+    """
+    return np.argmax(probas)
+        
+        
+def taux_succes(predictions, attendues):
+    taux = np.sum(predictions==attendues)/np.size(predictions)
+    return taux
+
+
+def entrainement(X_train, Y_train, n_iterations):
+    n_images = len(Y_train)         # correspond au nombre d'image sur lequel on s'entraine
+    npixel = X_train[0].size   # nombre de pixels dans 1 image
+    ncouche = 10
+    nsortie = 10
+    attendu = Y_train # le valeurs d'image attendu ( pour les 41 000 images)
+    # on initialise, même pour toutes les images
+    W0, W1, b0, b1 = initialise(npixel, ncouche, nsortie)
+    poids = [W0, W1, b0, b1]
+    lambda_ = 1.0
+    for i in range(n_iterations):
+        dJdW0_L = []
+        dJdb0_L = []
+        dJdW1_L = []
+        dJdb1_L = []
+        predictions = [] # le vecteur avec toutes les valeurs trouvées
+        for j in range(n_images):
+            xi = X_train[j]   # pixels de l'image actuelle
+            yi = Y_train[j]   # label de l'image actuelle ( taille 1 )
+            Z0, A0, Z1, A1 = prop_avant(xi, poids)
+            dJdW0, dJdb0, dJdW1, dJdb1 = prop_arriere(yi, Z0, A0, Z1, A1, xi, poids)
+            dJdW0_L.append(dJdW0)
+            dJdb0_L.append(dJdb0)
+            dJdW1_L.append(dJdW1)
+            dJdb1_L.append(dJdb1)
+            predictions.append(proba_max(A1)) # le chiffre trouvé pour l'image actuelle
+        W0, W1, b0, b1 = actualisation(lambda_, dJdW0_L, dJdb0_L, dJdW1_L, dJdb1_L, poids) # avec les nouvelles listes de dJ, on actualise les poids
+        poids = [W0, W1, b0, b1]
+        if i%10==0:
+            print(taux_succes(predictions, attendu))
+    return  W0, W1, b0, b1
+    
+
+"""
+à faire ensuite:
+en argument d'entrainement, mettre:
+W0, W1, b0, b1 = None
+et on les initialise direct avec ceux trouvés pour aller plus vite
+"""
 
 
 
-	
+
+
+
+
+
+
+
+
+
