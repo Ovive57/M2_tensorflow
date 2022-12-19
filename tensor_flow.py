@@ -16,6 +16,7 @@ num_classes = 10
 X_train = X_train.astype("float32")/np.max(X_test)
 X_test = X_test.astype("float32")/np.max(X_test)
 
+
 # Aplatissement des images :
 
 X_train = X_train.reshape((60000, 784))
@@ -24,13 +25,12 @@ X_test = X_test.reshape((10000, 784))
 
 
 
-# Transformation des labels en matrices binaires de taille 10:
+# Transformation des classes en matrices binaires de taille 10:
  
 Y_train = keras.utils.to_categorical(Y_train, num_classes)
 Y_test = keras.utils.to_categorical(Y_test, num_classes)
 
 # https://keras.io/examples/vision/mnist_convnet/ pour la doc
-
 
 
 
@@ -46,7 +46,20 @@ Y_test = keras.utils.to_categorical(Y_test, num_classes)
 # pour le input_shape j'ai galéré, au final c'est le nombre de pixels en entrée (784) tout simplement
 
 
+# OLIVIA : J'ai changé un peu ici vu qu'il dis d'utiliser la méthode add, je laisse ce que tu as fait commenté au cas où tu préfères le changer.
 
+# https://keras.io/guides/sequential_model/
+
+input_shape = X_train.shape[1] #784
+
+model = keras.Sequential()
+model.add(keras.Input(shape=input_shape))
+model.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
+model.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
+
+model.summary()
+
+""" Constance : 
 input_shape = X_train.shape[1] #784
 
 
@@ -57,6 +70,8 @@ model = keras.Sequential(
         layers.Dense(num_classes, activation='softmax'),
     ]
 )
+
+"""
 
 
 
@@ -93,9 +108,20 @@ out = model.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validatio
 
 # Ici je le save dans un document pour pas le faire tourner à chaque fois
 
-with open('out.pkl', 'wb') as f:
-    pickle.dump(out, f)
-        
+np.save("out.npy", out.history)
+print(out.history['loss'])
+
+#with open('out.pkl', 'wb') as f:
+ #   pickle.dump(out, f)
+
+# OLIVIA COMMENCE ICI:
+
+# Je fais 
+
+
+
+
+
 
 
 
