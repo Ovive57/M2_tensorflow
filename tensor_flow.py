@@ -3,6 +3,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 import pickle
+import matplotlib.pyplot as plt
 
 num_classes = 10
 
@@ -103,13 +104,13 @@ model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy
 # pour pour validation_data sur cette page: https://www.tensorflow.org/guide/keras/train_and_evaluate
 # Pour le stockage dans la variable out on voit après qu'il demande out.history donc c'est l'équivalent de history.history sur cette même page
 
+
 out = model.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validation_data=(X_test, Y_test))
 
 
 # Ici je le save dans un document pour pas le faire tourner à chaque fois
 
-np.save("out.npy", out.history)
-print(out.history['loss'])
+
 
 #with open('out.pkl', 'wb') as f:
  #   pickle.dump(out, f)
@@ -118,9 +119,26 @@ print(out.history['loss'])
 
 # Je fais 
 
+np.save("out.npy", out.history)
+
+
+loss = out.history['loss']
+accuracy = out.history['accuracy']
+val_loss = out.history['val_loss']
+val_accuracy = out.history['val_accuracy']
 
 
 
+
+out_c = model.fit(X_train, Y_train, batch_size=len(X_train), epochs=10000, validation_data=(X_test, Y_test))
+
+loss_c = out_c.history['loss']
+accuracy_c = out_c.history['accuracy']
+val_loss_c = out_c.history['val_loss']
+val_accuracy_c = out_c.history['val_accuracy']
+
+#taux_max = np.max([out_500.history['accuracy'], out_500.history['val_accuracy']])
+#print(taux_max)
 
 
 

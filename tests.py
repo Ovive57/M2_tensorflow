@@ -1,14 +1,13 @@
 import neurons as n
-#import tensor_flow as t_f
 import numpy as np
 import matplotlib.pyplot as plt
-import pickle
+
 import style
 
 path2plot = "plots/"
 plt.style.use(style.style1)
 
-"""
+
 print("Dimension de data : ", np.shape(n.data)) # 785, premier indice c'est la classe et les 784 autres sont les pixels de chaque image. 42000 images
 
 print("On prend", len(n.X_dev)," images pour le test.")
@@ -120,114 +119,8 @@ np.save("b0", b0)
 np.save("b1", b1)
 
 
-"""
 
 
-##### Partie tensor flow :
-# Pour cette partie j'importe le fichier out avec les data dedans pour faire l'analyse
-# Pour éviter de refaire les calculs longs de tensor flow
-# Pour ça je commente le import tensor_flow en haut sinon ca démarre tout seul 
-
-
-
-# Ouvre le fichier avec le dictionaire out dedans:
-
-#with open('out.pkl', 'rb') as f:
- #   out = pickle.load(f)
-
-print("\n\n\n Ca commence là:")
-
-out=np.load('out.npy',allow_pickle='TRUE').item()
-
-#out.history # ne fait rien
-
-#print("Clés associées au dictionnaire .history:", out.history.keys())
-
-print("Clés associées au dictionnaire out.history:", out.keys())
-# loss, accuracy, val_loss, val_accuracy
-
-# Loss = fonction de perte
-# Acc = taux de succès
-
-"""
-print("Loss ", len(out.history['loss']))
-print("Acc ", len(out.history['accuracy']))
-print("Val Loss", len(out.history['val_loss']))
-print("Val acc ", len(out.history['val_accuracy']))
-print("Taille des listes des 4 entrées du dict: 300 (= au nombre d'époques)")
-"""
-
-print("Loss ", len(out['loss']))
-print("Acc ", len(out['accuracy']))
-print("Val Loss", len(out['val_loss']))
-print("Val acc ", len(out['val_accuracy']))
-print("Taille des listes des 4 entrées du dict: 300 (= au nombre d'époques)")
-
-#iterations = np.arange(len(out.history['loss']))
-
-iterations = np.arange(len(out['loss']))
-
-
-# Evolution de la fonction de perte en fonction des itérations:
-
-
-fig = plt.figure(figsize=(25, 25))
-
-# Pour l'échantillon d'entrainement:
-
-plt.subplot(2, 2, 1)
-#plt.plot(iterations, out.history['loss'])
-plt.plot(iterations, out['loss'])
-plt.title("Evolution de la fonction de perte pour l'échantillon d'entrainement")
-plt.xlabel("Itérations")
-plt.ylabel("Fonction de perte")
-
-# Pour l'échantillon de validation:
-
-plt.subplot(2, 2, 2)
-#plt.plot(iterations, out.history['accuracy'])
-plt.plot(iterations, out['accuracy'])
-plt.title("Evolution du taux de succès pour l'échantillon d'entrainement")
-plt.xlabel("Itérations")
-plt.ylabel("Taux de succès")
-
-# Evolution du taux de succès en fonction des itérations:
-# Pour l'échantillon d'entrainement:
-
-plt.subplot(2, 2, 3)
-#plt.plot(iterations, out.history['val_loss'])
-plt.plot(iterations, out['val_loss'])
-plt.title("Evolution de la fonction de perte pour l'échantillon de validation")
-plt.xlabel("Itérations")
-plt.ylabel("Fonction de perte")
-
-# Pour l'échantillon de validation:
-
-plt.subplot(2, 2, 4)
-#plt.plot(iterations, out.history['val_accuracy'])
-plt.plot(iterations, out['val_accuracy'])
-plt.title("Evolution du taux de succès pour l'échantillon de validation")
-plt.xlabel("Itérations")
-plt.ylabel("Taux de succès")
-
-#plt.show()
-plotnom = path2plot + 'Evolutions.pdf'
-plt.savefig(plotnom)
-
-
-
-# Le taux de succès maximale atteint:
-
-
-#taux_max = np.max([out.history['accuracy'], out.history['val_accuracy']])
-taux_entr = np.max(out['accuracy'])
-taux_val = np.max(out['val_accuracy'])
-taux_max = np.max([out['accuracy'], out['val_accuracy']])
-print("Le taux de succès maximal atteint est:", taux_max)
-print("Le taux de succès maximal d'entrainement atteint est:", taux_entr)
-print("Le taux de succès maximal de validation atteint est:", taux_val)
-
-# A-t-il convergé ?
 
 
 
