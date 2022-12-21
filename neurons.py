@@ -136,15 +136,18 @@ def entrainement(X_train, Y_train, n_iterations, lambda_, poids=None, test = Fal
     ncouche = 10
     nsortie = 10
     attendu = Y_train # les valeurs d'images attendues ( pour les 41 000 images)
+    taux = []
     if poids==None:
         # on initialise, même pour toutes les images
         W0, W1, b0, b1 = initialise(npixel, ncouche, nsortie)
         poids = [W0, W1, b0, b1]
+        
     for i in range(n_iterations):
         dJdW0_L = []
         dJdb0_L = []
         dJdW1_L = []
         dJdb1_L = []
+        
         predictions = [] # le vecteur avec toutes les valeurs trouvées
         for j in range(n_images):
             xi = X_train[j]   # pixels de l'image actuelle
@@ -156,10 +159,18 @@ def entrainement(X_train, Y_train, n_iterations, lambda_, poids=None, test = Fal
             dJdW1_L.append(dJdW1)
             dJdb1_L.append(dJdb1)
             predictions.append(proba_max(A1)) # le chiffre trouvé pour l'image actuelle
+
         W0, W1, b0, b1 = actualisation(lambda_, dJdW0_L, dJdb0_L, dJdW1_L, dJdb1_L, poids) # avec les nouvelles listes de dJ, on actualise les poids
         poids = [W0, W1, b0, b1]
-        if i%10==0 and test:
-            print(taux_succes(predictions, attendu))
+        
+        if test :
+        	taux.append(taux_succes(predictions, attendu))
+        	if i%10==0:
+        		print(taux_succes(predictions, attendu))
+    if test:
+    	pathfiles = "files/" 
+    	np.save(pathfiles + f"{int(lambda_)}taux", taux) 
+    	print("File saved, path : " + pathfiles + f"{int(lambda_)}taux")      
     return  W0, W1, b0, b1
     
 
