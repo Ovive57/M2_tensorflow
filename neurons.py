@@ -136,9 +136,10 @@ def entrainement(X_train, Y_train, n_iterations, lambda_, poids=None):
     ncouche = 10
     nsortie = 10
     attendu = Y_train # les valeurs d'images attendues ( pour les 41 000 images)
-    # on initialise, même pour toutes les images
-    W0, W1, b0, b1 = initialise(npixel, ncouche, nsortie)
-    poids = [W0, W1, b0, b1]
+    if poids==None:
+        # on initialise, même pour toutes les images
+        W0, W1, b0, b1 = initialise(npixel, ncouche, nsortie)
+        poids = [W0, W1, b0, b1]
     lambda_ = 1.0
     for i in range(n_iterations):
         dJdW0_L = []
@@ -163,12 +164,19 @@ def entrainement(X_train, Y_train, n_iterations, lambda_, poids=None):
     return  W0, W1, b0, b1
     
 
-"""
-à faire ensuite:
-en argument d'entrainement, mettre:
-W0, W1, b0, b1 = None
-et on les initialise direct avec ceux trouvés pour aller plus vite
-"""
+# Fonction permettant d'obtenir la classe prédite pour les images de l'échantillon de validation à partir des poids obtenus pendant l'entrainement
+
+def validation(X_dev, Y_dev, poids):
+    n_images = len(Y_dev)
+    predictions = []
+    for i in range(n_images):
+        xi = X_dev[i]
+        Z0, A0, Z1, A1 = prop_avant(xi, poids)
+        predictions.append(proba_max(A1))
+    return taux_succes(predictions, Y_dev)
+    
+    
+
 
 
 
