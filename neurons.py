@@ -130,12 +130,12 @@ def taux_succes(predictions, attendues):
     return taux
 
 
-def entrainement(X_train, Y_train, n_iterations):
+def entrainement(X_train, Y_train, n_iterations, lambda_, poids=None):
     n_images = len(Y_train)         # correspond au nombre d'image sur lequel on s'entraine
     npixel = X_train[0].size   # nombre de pixels dans 1 image
     ncouche = 10
     nsortie = 10
-    attendu = Y_train # le valeurs d'image attendu ( pour les 41 000 images)
+    attendu = Y_train # les valeurs d'images attendues ( pour les 41 000 images)
     # on initialise, même pour toutes les images
     W0, W1, b0, b1 = initialise(npixel, ncouche, nsortie)
     poids = [W0, W1, b0, b1]

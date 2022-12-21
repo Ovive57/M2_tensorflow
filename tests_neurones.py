@@ -108,18 +108,25 @@ print("taux attendu: 0.75, taux de succes trouvé:", n.taux_succes(a,b))
 # Test de l'entrainement:
 
 n_iterations = 100
+lambda_ = 1.0
 
 
-
-W0, W1, b0, b1 = n.entrainement(n.X_train, n.Y_train, n_iterations)
+W0, W1, b0, b1 = n.entrainement(n.X_train, n.Y_train, n_iterations, lambda_)
 
 np.save("W0", W0)
 np.save("W1", W1)
 np.save("b0", b0)
 np.save("b1", b1)
 
+lambda_ = 0.1
+poids = [W0, W1, b0, b1]
 
+W0, W1, b0, b1 = n.entrainement(n.X_train, n.Y_train, n_iterations, lambda_, poids)
 
+np.save("W0", W0)
+np.save("W1", W1)
+np.save("b0", b0)
+np.save("b1", b1)
 
 
 

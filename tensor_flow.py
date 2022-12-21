@@ -31,25 +31,6 @@ X_test = X_test.reshape((10000, 784))
 Y_train = keras.utils.to_categorical(Y_train, num_classes)
 Y_test = keras.utils.to_categorical(Y_test, num_classes)
 
-# https://keras.io/examples/vision/mnist_convnet/ pour la doc
-
-
-
-""" J'ai commencé à partir de là: """
-
-# Initialiser un objet model: 
-
-# j'ai regardé cet exemple : https://keras.io/api/models/model/  
-# par ce que sur la page de base, c'est pas comme il met dans l'énoncé avec d'abord input, puis Dense puis couche finale 
-# et au finale je l'ai réécrit en version condensée, donc c'est comme tu préfères
-# j'ai gardé la notation 'relu' et 'softmax' ca fait plus net
-
-# pour le input_shape j'ai galéré, au final c'est le nombre de pixels en entrée (784) tout simplement
-
-
-# OLIVIA : J'ai changé un peu ici vu qu'il dis d'utiliser la méthode add, je laisse ce que tu as fait commenté au cas où tu préfères le changer.
-
-# https://keras.io/guides/sequential_model/
 
 input_shape = X_train.shape[1] #784
 
@@ -60,35 +41,8 @@ model.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
 
 model.summary()
 
-""" Constance : 
-input_shape = X_train.shape[1] #784
-
-
-model = keras.Sequential(
-    [
-        keras.Input(shape=input_shape),
-        layers.Dense(num_classes, activation="relu"),
-        layers.Dense(num_classes, activation='softmax'),
-    ]
-)
-
-"""
-
-
-
-""" Marche aussi :
-
-inputs = tf.keras.Input(shape=input_shape)
-x = tf.keras.layers.Dense(num_classes, activation='relu')(inputs)
-outputs = tf.keras.layers.Dense(num_classes, activation='softmax')(x)
-
-model = tf.keras.Model(inputs=inputs, outputs=outputs)
-
-"""
-
 
 # Créer un objet opt pour la minimisation de la fonction de perte:
-# J'ai pris l'exemple ici: https://keras.io/api/optimizers/
 
 opt = keras.optimizers.Adam(learning_rate=0.01)
 
@@ -101,23 +55,9 @@ model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy
 
 
 # Entraine le réseau de neuronnes
-# Là je suis retournée sur la première page: https://keras.io/examples/vision/mnist_convnet/
-# pour pour validation_data sur cette page: https://www.tensorflow.org/guide/keras/train_and_evaluate
-# Pour le stockage dans la variable out on voit après qu'il demande out.history donc c'est l'équivalent de history.history sur cette même page
-
 
 out = model.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validation_data=(X_test, Y_test))
 
-
-# Ici je le save dans un document pour pas le faire tourner à chaque fois
-
-
-
-#with open('out.pkl', 'wb') as f:
- #   pickle.dump(out, f)
-
-
-# OLIVIA COMMENCE ICI:
 
 np.save("out.npy", out.history)
 
@@ -128,7 +68,9 @@ val_loss = out.history['val_loss']
 val_accuracy = out.history['val_accuracy']
 
 
+
 # Model avec plus d'epoques pour essayer qu'il converge à 10⁻3 près, ça marche moyen (c = qui converge)
+# Le modèle doit être refait à chaque fois pour ne pas reprendre le taux de succès précédent
 
 model_c = keras.Sequential()
 model_c.add(keras.Input(shape=input_shape))
@@ -150,6 +92,8 @@ loss_c = out_c.history['loss']
 accuracy_c = out_c.history['accuracy']
 val_loss_c = out_c.history['val_loss']
 val_accuracy_c = out_c.history['val_accuracy']
+
+
 
 # Même entraînement avec un taux d'apprentisage de 0.2 (02 = 0.2 taux)
 
