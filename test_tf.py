@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import style
 
 path2plot = "plots/"
+pathfiles = "files/"
 plt.style.use(style.style1)
 
 ##### Partie tensor flow :
@@ -11,7 +12,7 @@ plt.style.use(style.style1)
 
 # Ouvre le fichier contenant le dictionaire out :
 
-out=np.load('out.npy',allow_pickle='TRUE').item()
+out=np.load(pathfiles + 'out.npy',allow_pickle='TRUE').item()
 
 
 print("Clés associées au dictionnaire out.history:", out.keys())
@@ -76,9 +77,9 @@ taux_entr = np.max(out['accuracy'])
 taux_val = np.max(out['val_accuracy'])
 taux_max = np.max([out['accuracy'], out['val_accuracy']])
 
-print("Le taux de succès maximal atteint est:", taux_max, " et il doit tendre vers 1")
-print("Le taux de succès maximal de validation atteint est:", taux_val, " et il doit tendre vers 1")
-print("Le taux de succès maximal d'entrainement atteint est:", taux_entr, " et il doit tendre vers 1")
+#print("Le taux de succès maximal atteint est:", taux_max, " et il doit tendre vers 1")
+#print("Le taux de succès maximal de validation atteint est:", taux_val, " et il doit tendre vers 1")
+#print("Le taux de succès maximal d'entrainement atteint est:", taux_entr, " et il doit tendre vers 1")
 
 print("Avec", len(out['accuracy']), " epochs, le taux de succès maximal est de :", taux_val)
 
@@ -93,7 +94,7 @@ print("Avec", len(out['accuracy']), " epochs, le taux de succès maximal est de 
 
 print("\n Modèle 2 avec 1000 itérations et un taux d'apprentissage 0.01")
 
-out_c=np.load('out_c.npy',allow_pickle='TRUE').item()
+out_c=np.load(pathfiles + 'out_c.npy',allow_pickle='TRUE').item()
 
 iterations = np.arange(len(out_c['loss']))
 conv_perte = np.zeros(len(out_c['loss']))
@@ -132,9 +133,9 @@ taux_entr_c = np.max(out_c['accuracy'])
 taux_val_c = np.max(out_c['val_accuracy'])
 taux_max_c = np.max([out_c['accuracy'], out_c['val_accuracy']])
 
-print("Le taux de succès maximal atteint est:", taux_max_c, " et il doit tendre vers 1")
-print("Le taux de succès maximal de validation atteint est:", taux_val_c, " et il doit tendre vers 1")
-print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_c, " et il doit tendre vers 1")
+#print("Le taux de succès maximal atteint est:", taux_max_c, " et il doit tendre vers 1")
+#print("Le taux de succès maximal de validation atteint est:", taux_val_c, " et il doit tendre vers 1")
+#print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_c, " et il doit tendre vers 1")
 
 print("Avec", len(out_c['accuracy']), " epochs, le taux de succès maximal est de :", taux_val_c)
 
@@ -146,13 +147,63 @@ print("Avec", len(out_c['accuracy']), " epochs, le taux de succès maximal est d
 
 
 
+####### MODELE 2 bis #########
+
+print("\n Modèle 2 avec 10000 itérations et un taux d'apprentissage 0.01")
+
+
+out_10000=np.load(pathfiles + 'out_10000.npy',allow_pickle='TRUE').item()
+
+iterations = np.arange(len(out_10000['loss']))
+conv_perte = np.zeros(len(out_10000['loss']))
+
+
+fig, ax = plt.subplots()
+ax.plot(iterations,conv_perte, c = 'k', ls = '--', label = "convergence")
+ax.plot(out_10000['loss'], c='b', ls='-', label="train")
+ax.plot(out_10000['val_loss'], c='r', ls='-', label="test")
+ax.set_xlabel("Epoch")
+ax.set_ylabel("Fonction de perte")
+ax.set_title("Evolution de la fonction de perte")
+plotnom = path2plot + 'fonction_perte_10000.pdf'
+ax.legend()
+plt.savefig(plotnom)
+#plt.show()
+
+conv = np.ones(len(out_10000['loss']))
+
+fig, ax = plt.subplots()
+ax.plot(iterations,conv, c = 'k', ls = '--', label = "convergence")
+ax.plot(iterations, out_100000['accuracy'], c='b', ls='-', label="train")
+ax.plot(iterations, out_100000['val_accuracy'], c='r', ls='-', label="test")
+ax.set_xlabel("Epoch")
+ax.set_ylabel("Taux de succès")
+ax.set_title("Evolution du taux de succès")
+plotnom = path2plot + 'taux_succes_10000.pdf'
+ax.legend()
+plt.savefig(plotnom)
+#plt.show()
+
+
+
+
+taux_entr_10000 = np.max(out_10000['accuracy'])
+taux_val_10000 = np.max(out_10000['val_accuracy'])
+taux_max_10000 = np.max([out_10000['accuracy'], out_10000['val_accuracy']])
+
+print("Le taux de succès maximal atteint est:", taux_max_10000, " et il doit tendre vers 1")
+print("Le taux de succès maximal de validation atteint est:", taux_val_10000, " et il doit tendre vers 1")
+print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_10000, " et il doit tendre vers 1")
+
+print("Avec", len(out_10000['accuracy']), " epochs, le taux de succès maximal est de :", taux_val_10000)
+
 ######### MODELE 3 ##########
 
 print("\n Modèle 3 avec 300 itérations et un taux d'apprentissage 0.2")
 
 # # Même entraînement avec un taux d'apprentisage de 0.2:
 
-out_02=np.load('out_02.npy',allow_pickle='TRUE').item()
+out_02=np.load(pathfiles + 'out_02.npy',allow_pickle='TRUE').item()
 
 
 iterations = np.arange(len(out_02['loss']))
@@ -199,7 +250,7 @@ print("Avec", len(out_02['accuracy']), " epochs, et le taux d'apprentissage = 0.
 
 # Nouveau réseau de néurones avec 10*50 = 500 neurones dans la couche cachée (500 = 500 neurones):
 
-out_500=np.load('out_500.npy',allow_pickle='TRUE').item()
+out_500=np.load(pathfiles + 'out_500.npy',allow_pickle='TRUE').item()
 
 
 iterations = np.arange(len(out_500['loss']))
@@ -243,7 +294,7 @@ print("Avec", len(out_500['accuracy']), " epochs, avec 500 neurones dans la couc
 
 # # Nouveau réseau avec une nouvelle couche cachée de 700 neurones et 200 epoques (nc = nouvelle couche)
 
-out_nc=np.load('out_nc.npy',allow_pickle='TRUE').item()
+out_nc=np.load(pathfiles + 'out_nc.npy',allow_pickle='TRUE').item()
 
 
 iterations = np.arange(len(out_nc['loss']))
@@ -287,7 +338,7 @@ print("Avec", len(out_nc['accuracy']), " epochs, et une deuxième couche cahcée
 
 ## Modification variable batch_size en divisant par 10, pour 200 epoques. (bs = batch_size)
 
-out_bs=np.load('out_bs.npy',allow_pickle='TRUE').item()
+out_bs=np.load(pathfiles + 'out_bs.npy',allow_pickle='TRUE').item()
 
 
 iterations = np.arange(len(out_bs['loss']))

@@ -5,6 +5,7 @@ from tensorflow.keras import layers
 import pickle
 import matplotlib.pyplot as plt
 
+pathfiles = "files/"
 num_classes = 10
 
 
@@ -34,6 +35,8 @@ Y_test = keras.utils.to_categorical(Y_test, num_classes)
 
 input_shape = X_train.shape[1] #784
 
+#### MODEL 1 ##### 
+
 model = keras.Sequential()
 model.add(keras.Input(shape=input_shape))
 model.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
@@ -59,7 +62,7 @@ model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy
 out = model.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validation_data=(X_test, Y_test))
 
 
-np.save("out.npy", out.history)
+np.save(pathfiles + "out.npy", out.history)
 
 
 loss = out.history['loss']
@@ -68,7 +71,7 @@ val_loss = out.history['val_loss']
 val_accuracy = out.history['val_accuracy']
 
 
-
+##### MODEL 2 ######
 # Model avec plus d'epoques pour essayer qu'il converge à 10⁻3 près, ça marche moyen (c = qui converge)
 # Le modèle doit être refait à chaque fois pour ne pas reprendre le taux de succès précédent
 
@@ -86,7 +89,7 @@ model_c.compile(loss='categorical_crossentropy', optimizer=opt_c, metrics=['accu
 
 out_c = model_c.fit(X_train, Y_train, batch_size=len(X_train), epochs=1000, validation_data=(X_test, Y_test))
 
-np.save("out_c.npy", out_c.history)
+np.save(pathfiles + "out_c.npy", out_c.history)
 
 loss_c = out_c.history['loss']
 accuracy_c = out_c.history['accuracy']
@@ -95,6 +98,34 @@ val_accuracy_c = out_c.history['val_accuracy']
 
 
 
+##### MODEL 2 bis ######
+# Model avec encore plus d'epoques pour essayer qu'il converge à 10⁻3 près, et pour voir le surentraînement
+
+# Le modèle doit être refait à chaque fois pour ne pas reprendre le taux de succès précédent
+
+model_10000 = keras.Sequential()
+model_10000.add(keras.Input(shape=input_shape))
+model_10000.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
+model_10000.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
+
+model_10000.summary()
+
+opt_10000 = keras.optimizers.Adam(learning_rate=0.01)
+
+model_10000.compile(loss='categorical_crossentropy', optimizer=opt_10000, metrics=['accuracy'])
+
+
+out_10000 = model_10000.fit(X_train, Y_train, batch_size=len(X_train), epochs=10000, validation_data=(X_test, Y_test))
+
+np.save(pathfiles + "out_10000.npy", out_10000.history)
+
+loss_10000 = out_10000.history['loss']
+accuracy_10000 = out_10000.history['accuracy']
+val_loss_10000 = out_10000.history['val_loss']
+val_accuracy_10000 = out_10000.history['val_accuracy']
+
+
+##### MODEL 3 ######
 # Même entraînement avec un taux d'apprentisage de 0.2 (02 = 0.2 taux)
 
 model_02 = keras.Sequential()
@@ -109,8 +140,9 @@ opt_02 = keras.optimizers.Adam(learning_rate=0.2)
 model_02.compile(loss='categorical_crossentropy', optimizer=opt_02, metrics=['accuracy'])
 out_02 = model_02.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validation_data=(X_test, Y_test))
 
-np.save("out_02.npy", out_02.history)
+np.save(pathfiles + "out_02.npy", out_02.history)
 
+##### MODEL 4 ######
 ## Nouveau réseau de néurones avec 10*50 = 500 neurones dans la couche cachée (500 = 500 neurones):
 
 model_500 = keras.Sequential()
@@ -125,8 +157,9 @@ opt_500 = keras.optimizers.Adam(learning_rate=0.01)
 model_500.compile(loss='categorical_crossentropy', optimizer=opt_500, metrics=['accuracy'])
 out_500 = model_500.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validation_data=(X_test, Y_test))
 
-np.save("out_500.npy", out_500.history)
+np.save(pathfiles + "out_500.npy", out_500.history)
 
+##### MODEL 5 ######
 ## Nouveau réseau avec une nouvelle couche cachée de 700 neurones et 200 epoques (nc = nouvelle couche)
 
 model_nc = keras.Sequential()
@@ -142,9 +175,9 @@ opt_nc = keras.optimizers.Adam(learning_rate=0.01)
 model_nc.compile(loss='categorical_crossentropy', optimizer=opt_nc, metrics=['accuracy'])
 out_nc = model_nc.fit(X_train, Y_train, batch_size=len(X_train), epochs=200, validation_data=(X_test, Y_test))
 
-np.save("out_nc.npy", out_nc.history)
+np.save(pathfiles + "out_nc.npy", out_nc.history)
 
-
+##### MODEL 6 ######
 # Modification variable batch_size en divisant par 10, pour 200 epoques. (bs = batch_size)
 
 model_bs = keras.Sequential()
@@ -161,8 +194,7 @@ batch_size = int(len(X_train)/10)
 model_bs.compile(loss='categorical_crossentropy', optimizer=opt_bs, metrics=['accuracy'])
 out_bs = model_bs.fit(X_train, Y_train, batch_size=batch_size, epochs=200, validation_data=(X_test, Y_test))
 
-np.save("out_bs.npy", out_bs.history)
-
+np.save(pathfiles + "out_bs.npy", out_bs.history)
 
 
 
