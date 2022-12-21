@@ -130,9 +130,9 @@ def taux_succes(predictions, attendues):
     return taux
 
 
-def entrainement(X_train, Y_train, n_iterations, lambda_, poids=None):
+def entrainement(X_train, Y_train, n_iterations, lambda_, poids=None, test = False):
     n_images = len(Y_train)         # correspond au nombre d'image sur lequel on s'entraine
-    npixel = X_train[0].size   # nombre de pixels dans 1 image
+    npixel = X_train[0].size   		# nombre de pixels dans 1 image
     ncouche = 10
     nsortie = 10
     attendu = Y_train # les valeurs d'images attendues ( pour les 41 000 images)
@@ -140,7 +140,6 @@ def entrainement(X_train, Y_train, n_iterations, lambda_, poids=None):
         # on initialise, même pour toutes les images
         W0, W1, b0, b1 = initialise(npixel, ncouche, nsortie)
         poids = [W0, W1, b0, b1]
-    lambda_ = 1.0
     for i in range(n_iterations):
         dJdW0_L = []
         dJdb0_L = []
@@ -159,7 +158,7 @@ def entrainement(X_train, Y_train, n_iterations, lambda_, poids=None):
             predictions.append(proba_max(A1)) # le chiffre trouvé pour l'image actuelle
         W0, W1, b0, b1 = actualisation(lambda_, dJdW0_L, dJdb0_L, dJdW1_L, dJdb1_L, poids) # avec les nouvelles listes de dJ, on actualise les poids
         poids = [W0, W1, b0, b1]
-        if i%10==0:
+        if i%10==0 and test:
             print(taux_succes(predictions, attendu))
     return  W0, W1, b0, b1
     

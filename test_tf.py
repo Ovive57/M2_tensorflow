@@ -174,8 +174,8 @@ conv = np.ones(len(out_10000['loss']))
 
 fig, ax = plt.subplots()
 ax.plot(iterations,conv, c = 'k', ls = '--', label = "convergence")
-ax.plot(iterations, out_100000['accuracy'], c='b', ls='-', label="train")
-ax.plot(iterations, out_100000['val_accuracy'], c='r', ls='-', label="test")
+ax.plot(iterations, out_10000['accuracy'], c='b', ls='-', label="train")
+ax.plot(iterations, out_10000['val_accuracy'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
 ax.set_ylabel("Taux de succès")
 ax.set_title("Evolution du taux de succès")
@@ -191,9 +191,9 @@ taux_entr_10000 = np.max(out_10000['accuracy'])
 taux_val_10000 = np.max(out_10000['val_accuracy'])
 taux_max_10000 = np.max([out_10000['accuracy'], out_10000['val_accuracy']])
 
-print("Le taux de succès maximal atteint est:", taux_max_10000, " et il doit tendre vers 1")
-print("Le taux de succès maximal de validation atteint est:", taux_val_10000, " et il doit tendre vers 1")
-print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_10000, " et il doit tendre vers 1")
+#print("Le taux de succès maximal atteint est:", taux_max_10000, " et il doit tendre vers 1")
+#print("Le taux de succès maximal de validation atteint est:", taux_val_10000, " et il doit tendre vers 1")
+#print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_10000, " et il doit tendre vers 1")
 
 print("Avec", len(out_10000['accuracy']), " epochs, le taux de succès maximal est de :", taux_val_10000)
 

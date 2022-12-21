@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import style
 
 path2plot = "plots/"
+pathfiles = "files/"
 plt.style.use(style.style1)
 
 
@@ -90,10 +91,6 @@ print("Shape matrice dJdW1", np.shape(dJdW1), " elle doit être (10,10)")
 print("Shape matrice dJdb1", np.shape(dJdb1), " elle doit être (10,)")
 
 
-
-
-
-
 # Test de taux succes:
 
 a = np.array([1,2,3,4])
@@ -104,27 +101,26 @@ a = np.array([1,2,3,4])
 b = np.array([1,2,5,4])
 print("taux attendu: 0.75, taux de succes trouvé:", n.taux_succes(a,b))
 
-"""
+
 # Test de l'entrainement:
 
 n_iterations = 100
 lambda_ = 1.0
 
+W0, W1, b0, b1 = n.entrainement(n.X_train, n.Y_train, n_iterations, lambda_, test = True)
 
-W0, W1, b0, b1 = n.entrainement(n.X_train, n.Y_train, n_iterations, lambda_)
-
-np.save("W0", W0)
-np.save("W1", W1)
-np.save("b0", b0)
-np.save("b1", b1)
-
-# Test du second entrainement à lambda = 0.1 :
+np.save(pathfiles + "W0", W0)
+np.save(pathfiles + "W1", W1)
+np.save(pathfiles + "b0", b0)
+np.save(pathfiles + "b1", b1)
 
 
-W0 = np.load("W0.npy")
-W1 = np.load("W1.npy")
-b0 = np.load("b0.npy")
-b1 = np.load("b1.npy")
+# Test du second entrainement avec lambda = 0.1 :
+
+W0 = np.load(pathfiles + "W0.npy")
+W1 = np.load(pathfiles + "W1.npy")
+b0 = np.load(pathfiles + "b0.npy")
+b1 = np.load(pathfiles + "b1.npy")
 
 n_iterations = 100
 
@@ -132,21 +128,21 @@ lambda_ = 0.1
 poids = [W0, W1, b0, b1]
 
 
-W0_01, W1_01, b0_01, b1_01 = n.entrainement(n.X_train, n.Y_train, n_iterations, lambda_, poids)
+W0_01, W1_01, b0_01, b1_01 = n.entrainement(n.X_train, n.Y_train, n_iterations, lambda_, poids, test = True)
 
-np.save("W0_01", W0_01)
-np.save("W1_01", W1_01)
-np.save("b0_01", b0_01)
-np.save("b1_01", b1_01)
-"""
+np.save(pathfiles + "W0_01", W0_01)
+np.save(pathfiles + "W1_01", W1_01)
+np.save(pathfiles + "b0_01", b0_01)
+np.save(pathfiles + "b1_01", b1_01)
+
 
 # Calcule les taux de succès de l'échantillon de validation :
 # Pour le premier entrainement:
 
-W0 = np.load("W0.npy")
-W1 = np.load("W1.npy")
-b0 = np.load("b0.npy")
-b1 = np.load("b1.npy")
+W0 = np.load(pathfiles + "W0.npy")
+W1 = np.load(pathfiles + "W1.npy")
+b0 = np.load(pathfiles + "b0.npy")
+b1 = np.load(pathfiles + "b1.npy")
 poids = [W0, W1, b0, b1]
 
 taux_succes = n.validation(n.X_dev, n.Y_dev, poids)
@@ -154,10 +150,10 @@ print("Le taux de succès obtenus après un entrainement de 100 itérations à l
 
 # Pour le second:
 
-W0_01 = np.load("W0_01.npy")
-W1_01 = np.load("W1_01.npy")
-b0_01 = np.load("b0_01.npy")
-b1_01 = np.load("b1_01.npy")
+W0_01 = np.load(pathfiles + "W0_01.npy")
+W1_01 = np.load(pathfiles + "W1_01.npy")
+b0_01 = np.load(pathfiles + "b0_01.npy")
+b1_01 = np.load(pathfiles + "b1_01.npy")
 poids_01 = [W0_01, W1_01, b0_01, b1_01]
 
 
