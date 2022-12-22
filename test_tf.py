@@ -27,7 +27,6 @@ print("Val acc ", len(out['val_accuracy']))
 print("Taille des listes des 4 entrées du dict: 300 (= au nombre d'époques)")
 
 
-
 ####### MODELE 1 #########
 
 print("\n Modèle Initial avec 300 itérations et un taux d'apprentissage 0.01")
@@ -82,7 +81,7 @@ taux_max = np.max([out['accuracy'], out['val_accuracy']])
 #print("Le taux de succès maximal d'entrainement atteint est:", taux_entr, " et il doit tendre vers 1")
 
 print("Avec", len(out['accuracy']), " epochs, le taux de succès maximal est de :", taux_val)
-
+print("La dernière valeur est :", out['val_accuracy'][-1])
 
 # A-t-il convergé ? Presque ! Mais pas à 10⁻3 près. 
 # En fait je pense que la phrase veut dire qu'il faut s'approcher à 1 avec une difference de maximum 10⁻3, c'est à dire, avoir un taux de succès de 0.99... minimum.
@@ -107,12 +106,12 @@ ax.plot(out_c['val_loss'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
 ax.set_ylabel("Fonction de perte")
 ax.set_title("Evolution de la fonction de perte")
-plotnom = path2plot + 'fonction_perte_c.pdf'
+plotnom = path2plot + 'fonction_perte_1000.pdf'
 ax.legend()
 plt.savefig(plotnom)
 #plt.show()
 
-conv = np.ones(len(out_c['loss']))
+conv = np.ones(len(out_c['val_accuracy']))
 
 fig, ax = plt.subplots()
 ax.plot(iterations,conv, c = 'k', ls = '--', label = "convergence")
@@ -121,10 +120,10 @@ ax.plot(iterations, out_c['val_accuracy'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
 ax.set_ylabel("Taux de succès")
 ax.set_title("Evolution du taux de succès")
-plotnom = path2plot + 'taux_succes_c.pdf'
+plotnom = path2plot + 'taux_succes_1000.pdf'
 ax.legend()
 plt.savefig(plotnom)
-#plt.show()
+plt.show()
 
 
 
@@ -133,9 +132,9 @@ taux_entr_c = np.max(out_c['accuracy'])
 taux_val_c = np.max(out_c['val_accuracy'])
 taux_max_c = np.max([out_c['accuracy'], out_c['val_accuracy']])
 
-#print("Le taux de succès maximal atteint est:", taux_max_c, " et il doit tendre vers 1")
-#print("Le taux de succès maximal de validation atteint est:", taux_val_c, " et il doit tendre vers 1")
-#print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_c, " et il doit tendre vers 1")
+print("Le taux de succès maximal atteint est:", taux_max_c, " et il doit tendre vers 1")
+print("Le taux de succès maximal de validation atteint est:", taux_val_c, " et il doit tendre vers 1")
+print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_c, " et il doit tendre vers 1")
 
 print("Avec", len(out_c['accuracy']), " epochs, le taux de succès maximal est de :", taux_val_c)
 
@@ -149,7 +148,7 @@ print("Avec", len(out_c['accuracy']), " epochs, le taux de succès maximal est d
 
 ####### MODELE 2 bis #########
 
-print("\n Modèle 2 avec 10000 itérations et un taux d'apprentissage 0.01")
+print("\n Modèle 2 avec 10 000 itérations et un taux d'apprentissage 0.01")
 
 
 out_10000=np.load(pathfiles + 'out_10000.npy',allow_pickle='TRUE').item()
@@ -191,11 +190,13 @@ taux_entr_10000 = np.max(out_10000['accuracy'])
 taux_val_10000 = np.max(out_10000['val_accuracy'])
 taux_max_10000 = np.max([out_10000['accuracy'], out_10000['val_accuracy']])
 
-#print("Le taux de succès maximal atteint est:", taux_max_10000, " et il doit tendre vers 1")
-#print("Le taux de succès maximal de validation atteint est:", taux_val_10000, " et il doit tendre vers 1")
-#print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_10000, " et il doit tendre vers 1")
+print("Le taux de succès maximal atteint est:", taux_max_10000, " et il doit tendre vers 1")
+print("Le taux de succès maximal de validation atteint est:", taux_val_10000, " et il doit tendre vers 1")
+print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_10000, " et il doit tendre vers 1")
 
 print("Avec", len(out_10000['accuracy']), " epochs, le taux de succès maximal est de :", taux_val_10000)
+
+
 
 ######### MODELE 3 ##########
 
@@ -230,8 +231,8 @@ ax.plot(iterations, out_02['accuracy'], c='b', ls='-', label="train")
 ax.plot(iterations, out_02['val_accuracy'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
 ax.set_ylabel("Taux de succès")
-ax.set_title("Evolution du tauc de succès")
-plotnom = path2plot + 'taux_succes_02.pdf'
+ax.set_title("Evolution du taux de succès")
+plotnom = path2plot + 'taux_succes_02_450.pdf'
 ax.legend()
 plt.savefig(plotnom)
 #plt.show()
@@ -243,12 +244,13 @@ taux_entr_02 = np.max(out_02['accuracy'])
 taux_val_02 = np.max(out_02['val_accuracy'])
 taux_max_02 = np.max([out_02['accuracy'], out_02['val_accuracy']])
 
-print("Avec", len(out_02['accuracy']), " epochs, et le taux d'apprentissage = 0.2, le taux de succès maximal est de :", taux_val_02) # Il est pire, 0.665.
+print("Avec", len(out_02['accuracy']), " epochs, et le taux d'apprentissage = 0.2, le taux de succès maximal est de :", taux_val_02) # Il est pire
+
 
 
 ######### MODELE 4 ##########
 
-# Nouveau réseau de néurones avec 10*50 = 500 neurones dans la couche cachée (500 = 500 neurones):
+# Nouveau réseau de neurones avec 10*50 = 500 neurones dans la couche cachée (500 = 500 neurones):
 
 out_500=np.load(pathfiles + 'out_500.npy',allow_pickle='TRUE').item()
 
@@ -277,7 +279,7 @@ ax.plot(iterations, out_500['accuracy'], c='b', ls='-', label="train")
 ax.plot(iterations, out_500['val_accuracy'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
 ax.set_ylabel("Taux de succès")
-ax.set_title("Evolution du tauc de succès")
+ax.set_title("Evolution du taux de succès")
 plotnom = path2plot + 'taux_succes_500.pdf'
 ax.legend()
 plt.savefig(plotnom)
@@ -290,9 +292,10 @@ taux_max_500 = np.max([out_500['accuracy'], out_500['val_accuracy']])
 print("Avec", len(out_500['accuracy']), " epochs, avec 500 neurones dans la couche cachée, le taux de succès maximal est de :", taux_val_500)
 
 
+
 ######### MODELE 5 ##########
 
-# # Nouveau réseau avec une nouvelle couche cachée de 700 neurones et 200 epoques (nc = nouvelle couche)
+## Nouveau réseau avec une nouvelle couche cachée de 700 neurones et 200 epoques (nc = nouvelle couche)
 
 out_nc=np.load(pathfiles + 'out_nc.npy',allow_pickle='TRUE').item()
 
@@ -331,6 +334,9 @@ taux_entr_nc = np.max(out_nc['accuracy'])
 taux_val_nc = np.max(out_nc['val_accuracy'])
 taux_max_nc = np.max([out_nc['accuracy'], out_nc['val_accuracy']])
 
+print("Le taux de succès maximal de validation atteint est:", taux_val_nc, " et il doit tendre vers 1")
+print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_nc, " et il doit tendre vers 1")
+
 print("Avec", len(out_nc['accuracy']), " epochs, et une deuxième couche cahcée, le taux de succès maximal est de :", taux_val_nc)
 
 
@@ -365,7 +371,7 @@ ax.plot(iterations, out_bs['accuracy'], c='b', ls='-', label="train")
 ax.plot(iterations, out_bs['val_accuracy'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
 ax.set_ylabel("Taux de succès")
-ax.set_title("Evolution du tauc de succès")
+ax.set_title("Evolution du taux de succès")
 plotnom = path2plot + 'taux_succes_bs.pdf'
 ax.legend()
 plt.savefig(plotnom)
@@ -374,6 +380,9 @@ plt.savefig(plotnom)
 taux_entr_bs = np.max(out_bs['accuracy'])
 taux_val_bs = np.max(out_bs['val_accuracy'])
 taux_max_bs = np.max([out_bs['accuracy'], out_bs['val_accuracy']])
+
+print("Le taux de succès maximal de validation atteint est:", taux_val_bs, " et il doit tendre vers 1")
+print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_bs, " et il doit tendre vers 1")
 
 print("Avec", len(out_bs['accuracy']), " epochs, et le batch_size/10, le taux de succès maximal est de :", taux_val_bs)
 

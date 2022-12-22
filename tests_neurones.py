@@ -91,7 +91,7 @@ print("Shape matrice dJdW1", np.shape(dJdW1), " elle doit être (10,10)")
 print("Shape matrice dJdb1", np.shape(dJdb1), " elle doit être (10,)")
 
 
-# Test de taux succes:
+# Test de la fonction 'taux de succes':
 
 a = np.array([1,2,3,4])
 b = np.array([1,3,5,4])
@@ -161,7 +161,7 @@ taux_succes_01 = n.validation(n.X_dev, n.Y_dev, poids_01)
 print("Le taux de succès obtenus après un second entrainement de 100 itérations à lambda=0.1:", taux_succes_01)
 
 
-# Le plot : 
+# Plot de l'évolution du taux de succès pour les deux taux d'apprentissage 
 
 taux0 = np.load(pathfiles + "0taux.npy")
 taux1 = np.load(pathfiles + "1taux.npy")
@@ -169,11 +169,11 @@ conv = np.ones(len(taux0))
 
 fig, ax = plt.subplots()
 ax.plot(conv, c = 'k', ls = '--', label = "convergence")
-ax.plot(taux1, c='b', ls='-', label="first")
-ax.plot(taux0, c='r', ls='-', label="second")
+ax.plot(taux1, c='b', ls='-', label="1.0")
+ax.plot(taux0, c='r', ls='-', label="0.1")
 ax.set_xlabel("Epoch")
 ax.set_ylabel("Taux de succès")
-ax.set_title("Evolution du taux de succès")
+#ax.set_title("Evolution du taux de succès pour deux taux d'apprentissage")
 plotnom = path2plot + 'taux_succes_test.pdf'
 ax.legend()
 plt.savefig(plotnom)

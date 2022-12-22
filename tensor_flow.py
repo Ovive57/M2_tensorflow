@@ -2,7 +2,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-import pickle
 import matplotlib.pyplot as plt
 
 pathfiles = "files/"
@@ -34,6 +33,7 @@ Y_test = keras.utils.to_categorical(Y_test, num_classes)
 
 
 input_shape = X_train.shape[1] #784
+
 
 #### MODEL 1 ##### 
 
@@ -138,12 +138,14 @@ model_02.summary()
 opt_02 = keras.optimizers.Adam(learning_rate=0.2)
 
 model_02.compile(loss='categorical_crossentropy', optimizer=opt_02, metrics=['accuracy'])
-out_02 = model_02.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validation_data=(X_test, Y_test))
+out_02 = model_02.fit(X_train, Y_train, batch_size=len(X_train), epochs=450, validation_data=(X_test, Y_test))
 
-np.save(pathfiles + "out_02.npy", out_02.history)
+np.save(pathfiles + "out_02_450.npy", out_02.history)
+
+
 
 ##### MODEL 4 ######
-## Nouveau réseau de néurones avec 10*50 = 500 neurones dans la couche cachée (500 = 500 neurones):
+## Nouveau réseau de neurones avec 10*50 = 500 neurones dans la couche cachée (500 = 500 neurones):
 
 model_500 = keras.Sequential()
 model_500.add(keras.Input(shape=input_shape))
@@ -176,6 +178,7 @@ model_nc.compile(loss='categorical_crossentropy', optimizer=opt_nc, metrics=['ac
 out_nc = model_nc.fit(X_train, Y_train, batch_size=len(X_train), epochs=200, validation_data=(X_test, Y_test))
 
 np.save(pathfiles + "out_nc.npy", out_nc.history)
+
 
 ##### MODEL 6 ######
 # Modification variable batch_size en divisant par 10, pour 200 epoques. (bs = batch_size)
