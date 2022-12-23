@@ -7,14 +7,11 @@ import matplotlib.pyplot as plt
 pathfiles = "files/"
 num_classes = 10
 
-
-(X_train, Y_train), (X_test, Y_test) = keras.datasets.mnist.load_data() 
-
-# np.max(X_test) == 255
+(X_train, Y_train), (X_test, Y_test) = keras.datasets.mnist.load_data()
 
 # Normalisation :
 
-X_train = X_train.astype("float32")/np.max(X_test)
+X_train = X_train.astype("float32")/np.max(X_test) # np.max(X_test) = np.max(X_train) = 255
 X_test = X_test.astype("float32")/np.max(X_test)
 
 
@@ -23,203 +20,176 @@ X_test = X_test.astype("float32")/np.max(X_test)
 X_train = X_train.reshape((60000, 784))
 X_test = X_test.reshape((10000, 784))
 
-
-
-
 # Transformation des classes en matrices binaires de taille 10:
- 
+
 Y_train = keras.utils.to_categorical(Y_train, num_classes)
 Y_test = keras.utils.to_categorical(Y_test, num_classes)
 
 
+#### MODELE 1 ####
+
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10 neurones, une couche de sortie de 10 neurones. 
+# Taux d'apprentissage de 0.01.
+# 300 époques.
+# batch_size 60000.
+
 input_shape = X_train.shape[1] #784
 
+model1 = keras.Sequential()
+model1.add(keras.Input(shape=input_shape))
+model1.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
+model1.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
 
-#### MODEL 1 ##### 
-
-model = keras.Sequential()
-model.add(keras.Input(shape=input_shape))
-model.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
-model.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
-
-model.summary()
-
+print("\nMODELE 1 : lambda = 0.01, 300 époques.\n")
+model1.summary() # Affichage modèle 1
 
 # Créer un objet opt pour la minimisation de la fonction de perte:
 
 opt = keras.optimizers.Adam(learning_rate=0.01)
 
+# Associe l'objet opt à model avec la méthode compile:
+
+model1.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
+
+# Entraînement du réseau de neuronnes avec la méthode fit:
+
+out1 = model1.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validation_data=(X_test, Y_test))
+
+np.save(pathfiles + "out1.npy", out1.history)
 
 
-# Associe l'objet opt à model :(même page https://keras.io/api/optimizers/ )
-# + ajout de 'metrics' comme demandé dans l'énoncé
+#### MODELE 2 ####
 
-model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10 neurones, une couche de sortie de 10 neurones.
+# Taux d'apprentissage de 0.01.
+# 1000 époques, pour essayer qu'il converge à 10⁻3 près.
+# batch_size 60000.
 
+model2 = keras.Sequential()
+model2.add(keras.Input(shape=input_shape))
+model2.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
+model2.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
 
-# Entraine le réseau de neuronnes
+print("\nMODELE 2 : lambda = 0.01, 1000 époques.\n")
+model2.summary()
 
-out = model.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validation_data=(X_test, Y_test))
+opt2 = keras.optimizers.Adam(learning_rate=0.01)
+model2.compile(loss='categorical_crossentropy', optimizer=opt2, metrics=['accuracy'])
+out2 = model2.fit(X_train, Y_train, batch_size=len(X_train), epochs=1000, validation_data=(X_test, Y_test))
 
-
-np.save(pathfiles + "out.npy", out.history)
-
-
-loss = out.history['loss']
-accuracy = out.history['accuracy']
-val_loss = out.history['val_loss']
-val_accuracy = out.history['val_accuracy']
-
-
-##### MODEL 2 ######
-# Model avec plus d'epoques pour essayer qu'il converge à 10⁻3 près, ça marche moyen (c = qui converge)
-# Le modèle doit être refait à chaque fois pour ne pas reprendre le taux de succès précédent
-
-model_c = keras.Sequential()
-model_c.add(keras.Input(shape=input_shape))
-model_c.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
-model_c.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
-
-model_c.summary()
-
-opt_c = keras.optimizers.Adam(learning_rate=0.01)
-
-model_c.compile(loss='categorical_crossentropy', optimizer=opt_c, metrics=['accuracy'])
+np.save(pathfiles + "out2.npy", out2.history)
 
 
-out_c = model_c.fit(X_train, Y_train, batch_size=len(X_train), epochs=1000, validation_data=(X_test, Y_test))
+#### MODELE 2 bis ####
 
-np.save(pathfiles + "out_c.npy", out_c.history)
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10 neurones, une couche de sortie de 10 neurones.
+# Taux d'apprentissage de 0.01.
+# 10000 époques, pour essayer qu'il converge à 10⁻3 près où voir le surentraînement.
+# batch_size 60000.
 
-loss_c = out_c.history['loss']
-accuracy_c = out_c.history['accuracy']
-val_loss_c = out_c.history['val_loss']
-val_accuracy_c = out_c.history['val_accuracy']
+model2b = keras.Sequential()
+model2b.add(keras.Input(shape=input_shape))
+model2b.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
+model2b.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
 
+print("\nMODELE 2 bis: lambda = 0.01, 10000 époques.\n")
+model2b.summary()
 
+opt2b = keras.optimizers.Adam(learning_rate=0.01)
+model2b.compile(loss='categorical_crossentropy', optimizer=opt2b, metrics=['accuracy'])
+out2b = model2b.fit(X_train, Y_train, batch_size=len(X_train), epochs=10000, validation_data=(X_test, Y_test))
 
-##### MODEL 2 bis ######
-# Model avec encore plus d'epoques pour essayer qu'il converge à 10⁻3 près, et pour voir le surentraînement
-
-# Le modèle doit être refait à chaque fois pour ne pas reprendre le taux de succès précédent
-
-model_10000 = keras.Sequential()
-model_10000.add(keras.Input(shape=input_shape))
-model_10000.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
-model_10000.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
-
-model_10000.summary()
-
-opt_10000 = keras.optimizers.Adam(learning_rate=0.01)
-
-model_10000.compile(loss='categorical_crossentropy', optimizer=opt_10000, metrics=['accuracy'])
+np.save(pathfiles + "out2b.npy", out2b.history)
 
 
-out_10000 = model_10000.fit(X_train, Y_train, batch_size=len(X_train), epochs=10000, validation_data=(X_test, Y_test))
+#### MODELE 3 ####
 
-np.save(pathfiles + "out_10000.npy", out_10000.history)
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10 neurones, une couche de sortie de 10 neurones.
+# Taux d'apprentissage de 0.2.
+# 300 époques.
+# batch_size 60000.
 
-loss_10000 = out_10000.history['loss']
-accuracy_10000 = out_10000.history['accuracy']
-val_loss_10000 = out_10000.history['val_loss']
-val_accuracy_10000 = out_10000.history['val_accuracy']
+model3 = keras.Sequential()
+model3.add(keras.Input(shape=input_shape))
+model3.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
+model3.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
 
+print("\nMODELE 3 : lambda = 0.2, 300 époques.\n")
+model3.summary()
 
-##### MODEL 3 ######
-# Même entraînement avec un taux d'apprentisage de 0.2 (02 = 0.2 taux)
+opt3 = keras.optimizers.Adam(learning_rate=0.2)
+model3.compile(loss='categorical_crossentropy', optimizer=opt3, metrics=['accuracy'])
+out3 = model3.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validation_data=(X_test, Y_test))
 
-model_02 = keras.Sequential()
-model_02.add(keras.Input(shape=input_shape))
-model_02.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
-model_02.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
-
-model_02.summary()
-
-opt_02 = keras.optimizers.Adam(learning_rate=0.2)
-
-model_02.compile(loss='categorical_crossentropy', optimizer=opt_02, metrics=['accuracy'])
-out_02 = model_02.fit(X_train, Y_train, batch_size=len(X_train), epochs=450, validation_data=(X_test, Y_test))
-
-np.save(pathfiles + "out_02_450.npy", out_02.history)
+np.save(pathfiles + "out3.npy", out3.history)
 
 
+#### MODELE 4 ####
 
-##### MODEL 4 ######
-## Nouveau réseau de neurones avec 10*50 = 500 neurones dans la couche cachée (500 = 500 neurones):
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10*50 = 500 neurones, une couche de sortie de 10 neurones.
+# Taux d'apprentissage de 0.01.
+# 300 époques.
+# batch_size 60000.
 
-model_500 = keras.Sequential()
-model_500.add(keras.Input(shape=input_shape))
-model_500.add(layers.Dense(num_classes*50, activation="relu", name = "cachee"))
-model_500.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
+model4 = keras.Sequential()
+model4.add(keras.Input(shape=input_shape))
+model4.add(layers.Dense(num_classes*50, activation="relu", name = "cachee"))
+model4.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
 
-model_500.summary()
+print("\nMODELE 4 : lambda = 0.01, 300 époques.\n")
+model4.summary()
 
-opt_500 = keras.optimizers.Adam(learning_rate=0.01)
+opt4 = keras.optimizers.Adam(learning_rate=0.01)
+model4.compile(loss='categorical_crossentropy', optimizer=opt4, metrics=['accuracy'])
+out4 = model4.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validation_data=(X_test, Y_test))
 
-model_500.compile(loss='categorical_crossentropy', optimizer=opt_500, metrics=['accuracy'])
-out_500 = model_500.fit(X_train, Y_train, batch_size=len(X_train), epochs=300, validation_data=(X_test, Y_test))
-
-np.save(pathfiles + "out_500.npy", out_500.history)
-
-##### MODEL 5 ######
-## Nouveau réseau avec une nouvelle couche cachée de 700 neurones et 200 epoques (nc = nouvelle couche)
-
-model_nc = keras.Sequential()
-model_nc.add(keras.Input(shape=input_shape))
-model_nc.add(layers.Dense(num_classes*50, activation="relu", name = "cachee1"))
-model_nc.add(layers.Dense(700, activation="relu", name = "cachee2"))
-model_nc.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
-
-model_nc.summary()
-
-opt_nc = keras.optimizers.Adam(learning_rate=0.01)
-
-model_nc.compile(loss='categorical_crossentropy', optimizer=opt_nc, metrics=['accuracy'])
-out_nc = model_nc.fit(X_train, Y_train, batch_size=len(X_train), epochs=200, validation_data=(X_test, Y_test))
-
-np.save(pathfiles + "out_nc.npy", out_nc.history)
+np.save(pathfiles + "out4.npy", out4.history)
 
 
-##### MODEL 6 ######
-# Modification variable batch_size en divisant par 10, pour 200 epoques. (bs = batch_size)
+#### MODELE 5 ####
 
-model_bs = keras.Sequential()
-model_bs.add(keras.Input(shape=input_shape))
-model_bs.add(layers.Dense(num_classes*50, activation="relu", name = "cachee1"))
-model_bs.add(layers.Dense(700, activation="relu", name = "cachee2"))
-model_bs.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10*50 = 500 neurones, une deuxième couche cachée de 700 neurones,
+# une couche de sortie de 10 neurones.
+# Taux d'apprentissage de 0.01.
+# 200 époques.
+# batch_size 60000.
 
-model_bs.summary()
+model5 = keras.Sequential()
+model5.add(keras.Input(shape=input_shape))
+model5.add(layers.Dense(num_classes*50, activation="relu", name = "cachee1"))
+model5.add(layers.Dense(700, activation="relu", name = "cachee2"))
+model5.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
 
-opt_bs = keras.optimizers.Adam(learning_rate=0.01)
+print("\nMODELE 5 : lambda = 0.01, 200 époques.\n")
+model5.summary()
+
+opt5 = keras.optimizers.Adam(learning_rate=0.01)
+model5.compile(loss='categorical_crossentropy', optimizer=opt5, metrics=['accuracy'])
+out5 = model5.fit(X_train, Y_train, batch_size=len(X_train), epochs=200, validation_data=(X_test, Y_test))
+
+np.save(pathfiles + "out5.npy", out5.history)
+
+
+#### MODELE 6 ####
+
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10*50 = 500 neurones, une deuxième couche cachée de 700 neurones,
+# une couche de sortie de 10 neurones.
+# Taux d'apprentissage de 0.01.
+# 200 époques.
+# batch_size 60000/10 = 6000.
+
+model6 = keras.Sequential()
+model6.add(keras.Input(shape=input_shape))
+model6.add(layers.Dense(num_classes*50, activation="relu", name = "cachee1"))
+model6.add(layers.Dense(700, activation="relu", name = "cachee2"))
+model6.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
+
+print("\nMODELE 6 : lambda = 0.01, 200 époques.\n")
+model6.summary()
+
+opt6 = keras.optimizers.Adam(learning_rate=0.01)
 batch_size = int(len(X_train)/10)
+model6.compile(loss='categorical_crossentropy', optimizer=opt6, metrics=['accuracy'])
+out6 = model6.fit(X_train, Y_train, batch_size=batch_size, epochs=200, validation_data=(X_test, Y_test))
 
-model_bs.compile(loss='categorical_crossentropy', optimizer=opt_bs, metrics=['accuracy'])
-out_bs = model_bs.fit(X_train, Y_train, batch_size=batch_size, epochs=200, validation_data=(X_test, Y_test))
-
-np.save(pathfiles + "out_bs.npy", out_bs.history)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+np.save(pathfiles + "out6.npy", out6.history)

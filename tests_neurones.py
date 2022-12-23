@@ -1,4 +1,4 @@
-import neurons as n
+#import neurons as n
 import numpy as np
 import matplotlib.pyplot as plt
 import style
@@ -170,12 +170,13 @@ print("Le taux de succès obtenus après un second entrainement de 100 itératio
 
 taux0 = np.load(pathfiles + "0taux.npy")
 taux1 = np.load(pathfiles + "1taux.npy")
-conv = np.ones(len(taux0))
+epoch1 = np.linspace(0,100,100)
+epoch0 = epoch1 + 100
 
 fig, ax = plt.subplots()
-ax.plot(conv, c = 'k', ls = '--', label = "convergence")
-ax.plot(taux1, c='b', ls='-', label="1.0")
-ax.plot(taux0, c='r', ls='-', label="0.1")
+ax.plot(epoch1, taux1, c='b', ls='-', label="$\lambda$ = 1.0")
+ax.plot(epoch0, taux0, c='r', ls='-', label="$\lambda$ = 0.1")
+ax.axvline(100, linestyle='--', color='black')
 ax.set_xlabel("Epoch")
 ax.set_ylabel("Taux de succès")
 ax.set_title("Evolution du taux de succès pour deux taux d'apprentissage")
