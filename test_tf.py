@@ -43,12 +43,14 @@ taux_max = np.max([out1['accuracy'], out1['val_accuracy']])
 
 # Convergences
 conv_perte = np.zeros(len(out1['loss']))
+conv_perte_test = np.ones(len(out1['val_loss']))*np.min(out1['val_loss'])
 conv_entr = np.ones(len(out1['loss']))*taux_entr
 conv_val = np.ones(len(out1['loss']))*taux_val
 
 # Plot Function de perte
 fig, ax = plt.subplots()
-ax.plot(iterations, conv_perte, c = 'k', ls = '--', label = "convergence souhaité")
+ax.plot(iterations, conv_perte, c = 'k', ls = '--', label = "convergence souhaitée")
+ax.plot(iterations,conv_perte_test, c = 'r', ls = '--', label = "convergence test")
 ax.plot(out1['loss'], c='b', ls='-', label="train")
 ax.plot(out1['val_loss'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
@@ -97,13 +99,14 @@ taux_max_2 = np.max([out2['accuracy'], out2['val_accuracy']])
 
 # Convergences
 conv_perte_2 = np.zeros(len(out2['loss']))
+conv_perte_test_2 = np.ones(len(out2['val_loss']))*np.min(out2['val_loss'])
 conv_entr_2 = np.ones(len(out2['loss']))*taux_entr_2
 conv_val_2 = np.ones(len(out2['loss']))*taux_val_2
 
 # Plot Function de perte
-# Peut-etre ajouter comme dans le modele 2bis
 fig, ax = plt.subplots()
-ax.plot(iterations,conv_perte_2, c = 'k', ls = '--', label = "convergence souhaité")
+ax.plot(iterations,conv_perte_2, c = 'k', ls = '--', label = "convergence souhaitée")
+ax.plot(iterations,conv_perte_test_2, c = 'r', ls = '--', label = "convergence test")
 ax.plot(out2['loss'], c='b', ls='-', label="train")
 ax.plot(out2['val_loss'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
@@ -112,7 +115,6 @@ ax.set_title("Evolution de la fonction de perte")
 plotnom = path2plot + 'fonction_perte_2.pdf'
 ax.legend()
 plt.savefig(plotnom)
-
 
 # Plot Taux de succès
 fig, ax = plt.subplots()
@@ -159,7 +161,7 @@ conv_val_2b = np.ones(len(out2b['loss']))*taux_val_2b
 
 # Plot Function de perte
 fig, ax = plt.subplots()
-ax.plot(iterations,conv_perte_2b, c = 'k', ls = '--', label = "convergence souhaité")
+ax.plot(iterations,conv_perte_2b, c = 'k', ls = '--', label = "convergence souhaitée")
 ax.plot(iterations,conv_perte_test_2b, c = 'r', ls = '--', label = "convergence test")
 ax.plot(out2b['loss'], c='b', ls='-', label="train")
 ax.plot(out2b['val_loss'], c='r', ls='-', label="test")
@@ -210,10 +212,9 @@ taux_max_3 = np.max([out3['accuracy'], out3['val_accuracy']])
 # Convergences
 conv_perte_3 = np.zeros(len(out3['loss']))
 
-
 # Plot Function de perte
 fig, ax = plt.subplots()
-ax.plot(iterations,conv_perte, c = 'k', ls = '--', label = "convergence souhaité")
+ax.plot(iterations,conv_perte_3, c = 'k', ls = '--', label = "convergence souhaitée")
 ax.plot(out3['loss'], c='b', ls='-', label="train")
 ax.plot(out3['val_loss'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
@@ -234,26 +235,40 @@ plotnom = path2plot + 'taux_succes_3.pdf'
 ax.legend()
 plt.savefig(plotnom)
 
-
 # Taux de succès
-print("Pour le modèle 2 bis, avec", len(out3['accuracy']), " epochs, le taux de succès maximal est de :", taux_val_3)
+print("Pour le modèle 3, avec", len(out3['accuracy']), " epochs, le taux de succès maximal est de :", taux_val_3)
 print("La dernière valeur est :", out3['val_accuracy'][-1])
 
-exit()
 
-######### MODELE 4 ##########
+#### MODELE 4 ####
 
-# Nouveau réseau de neurones avec 10*50 = 500 neurones dans la couche cachée (500 = 500 neurones):
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10*50 = 500 neurones, une couche de sortie de 10 neurones.
+# Taux d'apprentissage de 0.01.
+# 300 époques.
+# batch_size 60000.
+
+print("\nMODELE 4 : lambda = 0.01, 300 époques.\n")
 
 out4=np.load(pathfiles + 'out4.npy', allow_pickle='TRUE').item()
 
-
+# Epoques
 iterations = np.arange(len(out4['loss']))
-conv_perte = np.zeros(len(out4['loss']))
 
+# Taux de succès
+taux_entr_4 = np.max(out4['accuracy'])
+taux_val_4 = np.max(out4['val_accuracy'])
+taux_max_4 = np.max([out4['accuracy'], out4['val_accuracy']])
 
+# Convergences
+conv_perte_4 = np.zeros(len(out4['loss']))
+conv_perte_test_4 = np.ones(len(out4['val_loss']))*np.min(out4['val_loss'])
+conv_entr_4 = np.ones(len(out4['loss']))*taux_entr_4
+conv_val_4 = np.ones(len(out4['loss']))*taux_val_4
+
+# Plot Function de perte
 fig, ax = plt.subplots()
-ax.plot(iterations,conv_perte, c = 'k', ls = '--', label = "convergence")
+ax.plot(iterations,conv_perte_4, c = 'k', ls = '--', label = "convergence souhaitée")
+ax.plot(iterations,conv_perte_test_4, c = 'r', ls = '--', label = "convergence test")
 ax.plot(out4['loss'], c='b', ls='-', label="train")
 ax.plot(out4['val_loss'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
@@ -262,12 +277,11 @@ ax.set_title("Evolution de la fonction de perte")
 plotnom = path2plot + 'fonction_perte_4.pdf'
 ax.legend()
 plt.savefig(plotnom)
-#plt.show()
 
-conv = np.ones(len(out4['loss']))
-
+# Plot Taux de succès
 fig, ax = plt.subplots()
-ax.plot(iterations,conv, c = 'k', ls = '--', label = "convergence")
+ax.plot(iterations,conv_entr_4, c = 'b', ls = '--', label = "train convergence")
+ax.plot(iterations,conv_val_4, c = 'r', ls = '--', label = "test convergence")
 ax.plot(iterations, out4['accuracy'], c='b', ls='-', label="train")
 ax.plot(iterations, out4['val_accuracy'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
@@ -276,29 +290,42 @@ ax.set_title("Evolution du taux de succès")
 plotnom = path2plot + 'taux_succes_4.pdf'
 ax.legend()
 plt.savefig(plotnom)
-#plt.show()
 
-taux_entr_4 = np.max(out4['accuracy'])
-taux_val_4 = np.max(out4['val_accuracy'])
-taux_max_4 = np.max([out4['accuracy'], out4['val_accuracy']])
-
-print("Avec", len(out4['accuracy']), " epochs, avec 500 neurones dans la couche cachée, le taux de succès maximal est de :", taux_val_4)
+# Taux de succès
+print("Pour le modèle 4, avec", len(out4['accuracy']), " epochs, le taux de succès maximal est de :", taux_val_4)
+print("La dernière valeur est :", out4['val_accuracy'][-1])
 
 
+#### MODELE 5 ####
 
-######### MODELE 5 ##########
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10*50 = 500 neurones, une deuxième couche cachée de 700 neurones,
+# une couche de sortie de 10 neurones.
+# Taux d'apprentissage de 0.01.
+# 200 époques.
+# batch_size 60000.
 
-## Nouveau réseau avec une nouvelle couche cachée de 700 neurones et 200 epoques (nc = nouvelle couche)
+print("\nMODELE 5 : lambda = 0.01, 200 époques.\n")
 
 out5=np.load(pathfiles + 'out5.npy',allow_pickle='TRUE').item()
 
-
+# Epoques
 iterations = np.arange(len(out5['loss']))
-conv_perte = np.zeros(len(out5['loss']))
 
+# Taux de succès
+taux_entr_5 = np.max(out5['accuracy'])
+taux_val_5 = np.max(out5['val_accuracy'])
+taux_max_5 = np.max([out5['accuracy'], out5['val_accuracy']])
 
+# Convergences
+conv_perte_5 = np.zeros(len(out5['loss']))
+conv_perte_test_5 = np.ones(len(out5['val_loss']))*np.min(out5['val_loss'])
+conv_entr_5 = np.ones(len(out5['loss']))*taux_entr_5
+conv_val_5 = np.ones(len(out5['loss']))*taux_val_5
+
+# Plot Function de perte
 fig, ax = plt.subplots()
-ax.plot(iterations,conv_perte, c = 'k', ls = '--', label = "convergence")
+ax.plot(iterations,conv_perte_5, c = 'k', ls = '--', label = "convergence souhaitée")
+ax.plot(iterations,conv_perte_test_5, c = 'r', ls = '--', label = "convergence test")
 ax.plot(out5['loss'], c='b', ls='-', label="train")
 ax.plot(out5['val_loss'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
@@ -307,12 +334,11 @@ ax.set_title("Evolution de la fonction de perte")
 plotnom = path2plot + 'fonction_perte_5.pdf'
 ax.legend()
 plt.savefig(plotnom)
-#plt.show()
 
-conv = np.ones(len(out5['loss']))
-
+# Plot Taux de succès
 fig, ax = plt.subplots()
-ax.plot(iterations,conv, c = 'k', ls = '--', label = "convergence")
+ax.plot(iterations,conv_entr_5, c = 'b', ls = '--', label = "train convergence")
+ax.plot(iterations,conv_val_5, c = 'r', ls = '--', label = "test convergence")
 ax.plot(iterations, out5['accuracy'], c='b', ls='-', label="train")
 ax.plot(iterations, out5['val_accuracy'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
@@ -321,31 +347,42 @@ ax.set_title("Evolution du tauc de succès")
 plotnom = path2plot + 'taux_succes_5.pdf'
 ax.legend()
 plt.savefig(plotnom)
-#plt.show()
 
-taux_entr_5 = np.max(out5['accuracy'])
-taux_val_5 = np.max(out5['val_accuracy'])
-taux_max_5 = np.max([out5['accuracy'], out5['val_accuracy']])
-
-print("Le taux de succès maximal de validation atteint est:", taux_val_5, " et il doit tendre vers 1")
-print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_5, " et il doit tendre vers 1")
-
-print("Avec", len(out5['accuracy']), " epochs, et une deuxième couche cahcée, le taux de succès maximal est de :", taux_val_5)
+# Taux de succès
+print("Pour le modèle 5, avec", len(out5['accuracy']), " epochs, le taux de succès maximal est de :", taux_val_5)
+print("La dernière valeur est :", out5['val_accuracy'][-1])
 
 
-######### MODELE 6 ##########
+#### MODELE 6 ####
 
-## Modification variable batch_size en divisant par 10, pour 200 epoques. (bs = batch_size)
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10*50 = 500 neurones, une deuxième couche cachée de 700 neurones,
+# une couche de sortie de 10 neurones.
+# Taux d'apprentissage de 0.01.
+# 200 époques.
+# batch_size 60000/10 = 6000.
+
+print("\nMODELE 6 : lambda = 0.01, 200 époques.\n")
 
 out6=np.load(pathfiles + 'out6.npy',allow_pickle='TRUE').item()
 
-
+# Epoques
 iterations = np.arange(len(out6['loss']))
-conv_perte = np.zeros(len(out6['loss']))
 
+# Taux de succès
+taux_entr_6 = np.max(out6['accuracy'])
+taux_val_6 = np.max(out6['val_accuracy'])
+taux_max_6 = np.max([out6['accuracy'], out6['val_accuracy']])
 
+# Convergences
+conv_perte_6 = np.zeros(len(out6['loss']))
+conv_perte_test_6 = np.ones(len(out6['val_loss']))*np.min(out6['val_loss'])
+conv_entr_6 = np.ones(len(out6['loss']))*taux_entr_6
+conv_val_6 = np.ones(len(out6['loss']))*taux_val_6
+
+# Plot Function de perte
 fig, ax = plt.subplots()
-ax.plot(iterations,conv_perte, c = 'k', ls = '--', label = "convergence")
+ax.plot(iterations,conv_perte_6, c = 'k', ls = '--', label = "convergence souhaitée")
+ax.plot(iterations,conv_perte_test_6, c = 'r', ls = '--', label = "convergence test")
 ax.plot(out6['loss'], c='b', ls='-', label="train")
 ax.plot(out6['val_loss'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
@@ -354,12 +391,11 @@ ax.set_title("Evolution de la fonction de perte")
 plotnom = path2plot + 'fonction_perte_6.pdf'
 ax.legend()
 plt.savefig(plotnom)
-#plt.show()
 
-conv = np.ones(len(out6['loss']))
-
+# Plot Taux de succès
 fig, ax = plt.subplots()
-ax.plot(iterations,conv, c = 'k', ls = '--', label = "convergence")
+ax.plot(iterations,conv_entr_6, c = 'b', ls = '--', label = "train convergence")
+ax.plot(iterations,conv_val_6, c = 'r', ls = '--', label = "test convergence")
 ax.plot(iterations, out6['accuracy'], c='b', ls='-', label="train")
 ax.plot(iterations, out6['val_accuracy'], c='r', ls='-', label="test")
 ax.set_xlabel("Epoch")
@@ -368,13 +404,11 @@ ax.set_title("Evolution du taux de succès")
 plotnom = path2plot + 'taux_succes_6.pdf'
 ax.legend()
 plt.savefig(plotnom)
-#plt.show()
 
 taux_entr_6 = np.max(out6['accuracy'])
 taux_val_6 = np.max(out6['val_accuracy'])
 taux_max_6 = np.max([out6['accuracy'], out6['val_accuracy']])
 
-print("Le taux de succès maximal de validation atteint est:", taux_val_6, " et il doit tendre vers 1")
-print("Le taux de succès maximal d'entrainement atteint est:", taux_entr_6, " et il doit tendre vers 1")
-
-print("Avec", len(out6['accuracy']), " epochs, et le batch_size/10, le taux de succès maximal est de :", taux_val_6)
+# Taux de succès
+print("Pour le modèle 6, avec", len(out6['accuracy']), " epochs, le taux de succès maximal est de :", taux_val_6)
+print("La dernière valeur est :", out6['val_accuracy'][-1])
