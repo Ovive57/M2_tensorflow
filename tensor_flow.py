@@ -1,8 +1,6 @@
 import numpy as np
-import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-import matplotlib.pyplot as plt
 
 pathfiles = "files/"
 num_classes = 10
@@ -25,6 +23,8 @@ X_test = X_test.reshape((10000, 784))
 Y_train = keras.utils.to_categorical(Y_train, num_classes)
 Y_test = keras.utils.to_categorical(Y_test, num_classes)
 
+input_shape = X_train.shape[1] #784
+
 
 #### MODELE 1 ####
 
@@ -32,8 +32,6 @@ Y_test = keras.utils.to_categorical(Y_test, num_classes)
 # Taux d'apprentissage de 0.01.
 # 300 époques.
 # batch_size 60000.
-
-input_shape = X_train.shape[1] #784
 
 model1 = keras.Sequential()
 model1.add(keras.Input(shape=input_shape))
@@ -80,7 +78,7 @@ out2 = model2.fit(X_train, Y_train, batch_size=len(X_train), epochs=1000, valida
 np.save(pathfiles + "out2.npy", out2.history)
 
 
-#### MODELE 2 bis ####
+#### MODELE 2 bis #### # On vous conseille de commenter ce modele si vous allez le run. Vous trouverez le fichier associé dans le dossier files/
 
 # Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10 neurones, une couche de sortie de 10 neurones.
 # Taux d'apprentissage de 0.01.
