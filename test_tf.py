@@ -190,6 +190,62 @@ print("Pour le modèle 2 bis, avec", len(out2b['accuracy']), " epochs, le taux d
 print("La dernière valeur est :", out2b['val_accuracy'][-1])
 
 
+#### MODELE 2 bisbis ####
+
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10 neurones, une couche de sortie de 10 neurones.
+# Taux d'apprentissage de 0.01.
+# 500 époques, pour essayer qu'il converge à 10⁻3 près où voir le surentraînement.
+# batch_size 60000.
+
+print("\nMODELE 2 bisbis: lambda = 0.01, 500 époques.\n")
+
+out2bb=np.load(pathfiles + 'out2bb.npy',allow_pickle='TRUE').item()
+
+# Epoques
+iterations = np.arange(len(out2bb['loss']))
+
+# Taux de succès
+taux_entr_2bb = np.max(out2bb['accuracy'])
+taux_val_2bb = np.max(out2bb['val_accuracy'])
+taux_max_2bb = np.max([out2bb['accuracy'], out2bb['val_accuracy']])
+
+# Convergences
+conv_perte_2bb = np.zeros(len(out2bb['loss']))
+conv_perte_test_2bb = np.ones(len(out2bb['val_loss']))*np.min(out2bb['val_loss'])
+conv_entr_2bb = np.ones(len(out2bb['loss']))*taux_entr_2bb
+conv_val_2bb = np.ones(len(out2bb['loss']))*taux_val_2bb
+
+# Plot Function de perte
+fig, ax = plt.subplots()
+ax.plot(iterations,conv_perte_2bb, c = 'k', ls = '--', label = "convergence souhaitée")
+ax.plot(iterations,conv_perte_test_2bb, c = 'r', ls = '--', label = "convergence test")
+ax.plot(out2bb['loss'], c='b', ls='-', label="train")
+ax.plot(out2bb['val_loss'], c='r', ls='-', label="test")
+ax.set_xlabel("Epoch")
+ax.set_ylabel("Fonction de perte")
+ax.set_title("Evolution de la fonction de perte")
+plotnom = path2plot + 'fonction_perte_2bb.pdf'
+ax.legend()
+plt.savefig(plotnom)
+
+# Plot Taux de succès
+fig, ax = plt.subplots()
+ax.plot(iterations,conv_entr_2bb, c = 'b', ls = '--', label = "train convergence")
+ax.plot(iterations,conv_val_2bb, c = 'r', ls = '--', label = "test convergence")
+ax.plot(iterations, out2bb['accuracy'], c='b', ls='-', label="train")
+ax.plot(iterations, out2bb['val_accuracy'], c='r', ls='-', label="test")
+ax.set_xlabel("Epoch")
+ax.set_ylabel("Taux de succès")
+ax.set_title("Evolution du taux de succès")
+plotnom = path2plot + 'taux_succes_2bb.pdf'
+ax.legend()
+plt.savefig(plotnom)
+
+# Taux de succès
+print("Pour le modèle 2 bis bis, avec", len(out2bb['accuracy']), " epochs, le taux de succès maximal est de :", taux_val_2bb)
+print("La dernière valeur est :", out2bb['val_accuracy'][-1])
+
+
 #### MODELE 3 ####
 
 # Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10 neurones, une couche de sortie de 10 neurones.

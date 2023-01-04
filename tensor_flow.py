@@ -100,6 +100,27 @@ out2b = model2b.fit(X_train, Y_train, batch_size=len(X_train), epochs=10000, val
 np.save(pathfiles + "out2b.npy", out2b.history)
 
 
+#### MODELE 2 bis bis #### 
+
+# Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10 neurones, une couche de sortie de 10 neurones.
+# Taux d'apprentissage de 0.01.
+# 500 époques, pour essayer qu'il converge à 10⁻3 près où voir le surentraînement.
+# batch_size 60000.
+
+model2bb = keras.Sequential()
+model2bb.add(keras.Input(shape=input_shape))
+model2bb.add(layers.Dense(num_classes, activation="relu", name = "cachee"))
+model2bb.add(layers.Dense(num_classes, activation="softmax", name = "sortie"))
+
+print("\nMODELE 2 bisbis: lambda = 0.01, 500 époques.\n")
+model2bb.summary()
+
+opt2bb = keras.optimizers.Adam(learning_rate=0.01)
+model2bb.compile(loss='categorical_crossentropy', optimizer=opt2bb, metrics=['accuracy'])
+out2bb = model2bb.fit(X_train, Y_train, batch_size=len(X_train), epochs=500, validation_data=(X_test, Y_test))
+
+np.save(pathfiles + "out2bb.npy", out2bb.history)
+
 #### MODELE 3 ####
 
 # Modèle avec une couche d'entrée de 784 neurones, une couche cachée de 10 neurones, une couche de sortie de 10 neurones.
